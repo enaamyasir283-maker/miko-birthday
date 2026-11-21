@@ -1,0 +1,436 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ميكو | حكاية تستحق أن تروى</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Cairo', sans-serif;
+  color: #563d58;
+  background:
+    radial-gradient(circle at 10% 10%, #ffe3e8, transparent 35%),
+    radial-gradient(circle at 90% 90%, #e8ddff, transparent 40%),
+    linear-gradient(135deg, #fff8f1, #f8edff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 22px;
+}
+
+.container {
+  width: 100%;
+  max-width: 510px;
+  text-align: center;
+  padding: 30px 22px;
+  border: 1px solid #ffffff;
+  border-radius: 28px;
+  background: rgba(255,255,255,.78);
+  box-shadow: 0 15px 50px #9d7b9b25;
+  position: relative;
+  overflow: hidden;
+}
+
+.stars {
+  color: #d5a64b;
+  font-size: 23px;
+  letter-spacing: 9px;
+  margin: 12px;
+}
+
+h1 {
+  font-family: 'Amiri', serif;
+  font-size: 37px;
+  color: #9b668e;
+  margin: 15px 0;
+}
+
+h2 {
+  font-family: 'Amiri', serif;
+  font-size: 27px;
+  color: #986a91;
+}
+
+p {
+  line-height: 2;
+  font-size: 15px;
+}
+
+.subtitle {
+  color: #9c849a;
+  font-size: 13px;
+}
+
+button {
+  font-family: 'Cairo', sans-serif;
+  border: none;
+  cursor: pointer;
+  transition: .25s;
+}
+
+.main-btn {
+  background: linear-gradient(120deg, #bd8cae, #9575b9);
+  color: white;
+  border-radius: 30px;
+  padding: 13px 35px;
+  font-size: 16px;
+  margin-top: 20px;
+  box-shadow: 0 5px 15px #b58dbb50;
+}
+
+.main-btn:active {
+  transform: scale(.96);
+}
+
+.progress {
+  height: 7px;
+  background: #eee3ef;
+  border-radius: 20px;
+  margin: 25px 0;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg,#d7a8c8,#a58acb);
+  transition: .5s;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  margin: 10px 0;
+  border-radius: 15px;
+  border: 1px solid #eadbea;
+  background: #fffafd;
+  color: #725c75;
+  font-size: 15px;
+}
+
+.option:hover, .option.selected {
+  background: #f1e3f2;
+  border-color: #b58ab6;
+  transform: translateY(-2px);
+}
+
+#game, #result {
+  display: none;
+}
+
+#questionText {
+  min-height: 75px;
+}
+
+.counter {
+  color: #ad8bad;
+  font-size: 13px;
+}
+
+#resultMessage {
+  background: #fff9fc;
+  border: 1px solid #ead8e9;
+  padding: 20px;
+  border-radius: 20px;
+  line-height: 2.2;
+  white-space: pre-line;
+  text-align: right;
+  font-family: 'Amiri', serif;
+  font-size: 19px;
+}
+
+.footer {
+  margin-top: 25px;
+  color: #b49bb2;
+  font-size: 12px;
+}
+
+#particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  bottom: -30px;
+  animation: floatUp 6s linear forwards;
+  color: #c69ac4;
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="particles"></div>
+
+<main class="container">
+
+<div class="stars">✦ ✧ ✦</div>
+
+<section id="welcome">
+  <p class="subtitle">A SPECIAL BIRTHDAY STORY</p>
+  <h1>ميكو، حكاية تستحق أن تُروى</h1>
+  <p>
+    في مكان بعيد، بين النجوم والحكايات،
+    توجد قصة لم تُكتب نهايتها بعد...
+  </p>
+  <p>
+    بطلتها فتاة مميزة تدعى ميكو،
+    واليوم خُصص لها فصل مختلف تماماً.
+  </p>
+  <p>هل أنتِ مستعدة لاكتشاف ما تخبئه لكِ الحكاية؟</p>
+  <button class="main-btn" onclick="startGame()">
+    ابدئي المغامرة ✨
+  </button>
+</section>
+
+<section id="game">
+  <p class="subtitle">رحلة صغيرة لاكتشاف حكايتك</p>
+
+  <div class="progress">
+    <div class="bar" id="bar"></div>
+  </div>
+
+  <p class="counter" id="counter"></p>
+  <h2 id="questionText"></h2>
+  <div id="options"></div>
+
+  <button class="main-btn" id="nextBtn"
+    onclick="nextQuestion()" disabled>
+    التالي ←
+  </button>
+</section>
+
+<section id="result">
+  <div class="stars">✦ ✧ ♡ ✧ ✦</div>
+  <p class="subtitle">THE FINAL CHAPTER</p>
+  <h1>إلى ميكو...</h1>
+  <p>لقد وصلتِ إلى نهاية الرحلة، ولكن ليس إلى نهاية الحكاية.</p>
+
+  <div id="resultMessage"></div>
+
+  <button class="main-btn" onclick="copyMessage()">
+    انسخي رسالتك ♡
+  </button>
+
+  <button class="main-btn" onclick="restartGame()">
+    أعيدي الرحلة
+  </button>
+
+  <p class="footer">
+    صُنعت هذه الحكاية بمحبة، لأجل ميكو وحدها.
+  </p>
+</section>
+
+<div class="footer">✧ SOME PEOPLE ARE THEIR OWN MAGIC ✧</div>
+
+</main>
+
+<script>
+const questions = [
+  {
+    question: "لو كانت شخصيتك شيئاً من الطبيعة، فماذا ستكون؟",
+    options: [
+      "☀️ شمساً تنشر الدفء",
+      "🌙 قمراً يحمل الهدوء",
+      "🌷 زهرة لا تشبه غيرها",
+      "🦋 فراشة لا تعرف الحدود"
+    ]
+  },
+  {
+    question: "ما الشيء الذي تتمنين أن يتذكره الناس عنك؟",
+    options: [
+      "ضحكتي التي لا تُنسى",
+      "قلبي الذي يهتم بالجميع",
+      "شخصيتي المختلفة",
+      "الأمان الذي يشعرون به معي"
+    ]
+  },
+  {
+    question: "لو أمكنك الاحتفاظ بشعور واحد إلى الأبد، ماذا تختارين؟",
+    options: [
+      "فرحة اللحظات البسيطة",
+      "دفء الأصدقاء",
+      "حماس المغامرات الجديدة",
+      "راحة البال والطمأنينة"
+    ]
+  },
+  {
+    question: "أي أمنية تريدين أن تحملها لك السنة الجديدة؟",
+    options: [
+      "تحقيق أحلامي الكبيرة",
+      "مغامرات وذكريات لا تُنسى",
+      "أيام مليئة بالضحك",
+      "أن أجد السعادة في كل تفاصيل حياتي"
+    ]
+  },
+  {
+    question: "وأخيراً، كيف تودين أن تكون خاتمة حكايتك؟",
+    options: [
+      "أن أكون نجمة لا تنطفئ",
+      "أن أعيش مغامرة عظيمة",
+      "أن أجد عالمي الذي أنتمي إليه",
+      "أن أكون سعيدة وفخورة بنفسي"
+    ]
+  }
+];
+
+let current = 0;
+let answers = [];
+
+function startGame() {
+  document.getElementById('welcome').style.display = 'none';
+  document.getElementById('game').style.display = 'block';
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = questions[current];
+
+  document.getElementById('counter').textContent =
+    `الفصل ${current + 1} من ${questions.length}`;
+
+  document.getElementById('questionText').textContent =
+    q.question;
+
+  document.getElementById('bar').style.width =
+    (current / questions.length * 100) + '%';
+
+  const options = document.getElementById('options');
+  options.innerHTML = '';
+
+  document.getElementById('nextBtn').disabled = true;
+
+  q.options.forEach((option, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = option;
+
+    btn.onclick = () => {
+      answers[current] = option;
+
+      document.querySelectorAll('.option').forEach(el => {
+        el.classList.remove('selected');
+      });
+
+      btn.classList.add('selected');
+      document.getElementById('nextBtn').disabled = false;
+    };
+
+    options.appendChild(btn);
+  });
+
+  if (answers[current]) {
+    document.querySelectorAll('.option')[q.options.indexOf(answers[current])]
+      ?.classList.add('selected');
+    document.getElementById('nextBtn').disabled = false;
+  }
+
+  document.getElementById('nextBtn').textContent =
+    current === questions.length - 1 ? 'اكتشفي المفاجأة ✨' : 'التالي ←';
+}
+
+function nextQuestion() {
+  if (!answers[current]) return;
+
+  if (current < questions.length - 1) {
+    current++;
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById('game').style.display = 'none';
+  document.getElementById('result').style.display = 'block';
+
+  document.getElementById('bar').style.width = '100%';
+
+  const message =
+`إلى ميكو الجميلة ♡
+
+في عيد ميلادك، أردنا أن نخبرك أن بعض الأشخاص لا يحتاجون إلى بذل أي جهد ليكونوا مميزين، فهم ببساطة يحملون شيئاً مختلفاً بداخلهم.
+
+أنتِ تشبهين ${answers[0]}.
+
+ومن أجمل ما يميزك ${answers[1]}.
+
+أما الشعور الذي اخترتِ الاحتفاظ به فهو ${answers[2]}.
+
+نتمنى أن تحمل لك سنتك الجديدة ${answers[3]}.
+
+وأن تكون خاتمة كل فصل من حياتك كما تمنيتِ: ${answers[4]}.
+
+لا تنسي أن العالم أكبر وأجمل بوجود أشخاص مثلك، وأنك تستحقين كل الأشياء الجميلة التي تنتظرينها.
+
+عيد ميلاد سعيد يا ميكو!
+
+لتكن سنتك الجديدة بداية حكاية أجمل مما تخيلتِ.
+
+♡`;
+
+  document.getElementById('resultMessage').textContent = message;
+
+  for (let i = 0; i < 30; i++) {
+    setTimeout(createParticle, i * 100);
+  }
+}
+
+function copyMessage() {
+  const text = document.getElementById('resultMessage').textContent;
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text)
+      .then(() => alert('تم نسخ رسالتك بنجاح ♡'))
+      .catch(() => alert('يمكنك تحديد الرسالة ونسخها يدوياً.'));
+  } else {
+    alert('يمكنك تحديد الرسالة ونسخها يدوياً.');
+  }
+}
+
+function restartGame() {
+  current = 0;
+  answers = [];
+
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('welcome').style.display = 'block';
+}
+
+function createParticle() {
+  const p = document.createElement('span');
+  p.className = 'particle';
+  p.textContent = ['✦', '♡', '✧', '✨'][Math.floor(Math.random() * 4)];
+
+  p.style.left = Math.random() * 100 + 'vw';
+  p.style.fontSize = (14 + Math.random() * 20) + 'px';
+
+  document.getElementById('particles').appendChild(p);
+
+  setTimeout(() => p.remove(), 6000);
+}
+</script>
+
+</body>
+  </html>
+  
